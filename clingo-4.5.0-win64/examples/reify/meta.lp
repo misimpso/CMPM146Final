@@ -37,12 +37,6 @@ hold(A) :- weight(A,G,B),
  :- compute(-L), L > 0,     hold(L).
 
 hide(A,_criteria(J,W,Q)) :- show(A,_criteria(J,W,Q)).
-hide(A,_query)           :- show(A,_query).
-hide(A,_optimize(J,W,Q)) :- show(A,_optimize(J,W,Q)).
-
-optimize(J,W,Q) :- hold(A), show(A,_optimize(J,W,Q)).
-
- :- not hold(A), show(A,_query).
 
 #show.
 #show T : show(A,T), hold(A), not hide(A,T).

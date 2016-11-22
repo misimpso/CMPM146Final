@@ -68,7 +68,7 @@ condo(A) :- cxopt(J,W,pref), criteria(J,W,A), true(A), not hold(A).
 nocon(A) :- cxopt(J,W,pref), criteria(J,W,A), fail(A).
 nocon(A) :- cxopt(J,W,pref), criteria(J,W,A), hold(A).
 
-cando(J,W,A)    :- cxopt(J,W,pref), criteria(J,W,A), criteria(J,W,A'), prefer(A,A'), A != A', cando(A), condo(A').
+cando(J,W,A)    :- cxopt(J,W,pref), minimize(J,S), criteria(J,W,A), criteria(J,W,A'), prefer(A,A'), A != A', cando(A), condo(A').
 
 nocon(J,W,A)    :- cxopt(J,W,pref), criteria(J,W,A), nocon(A).
 nocon(J,W,A)    :- cxopt(J,W,pref), criteria(J,W,A), nocan(A') : criteria(J,W,A'), A != A', prefer(A,A').

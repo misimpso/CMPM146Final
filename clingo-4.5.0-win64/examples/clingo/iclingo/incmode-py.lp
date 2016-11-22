@@ -21,7 +21,6 @@ def main(prg):
         if step > 0:
             prg.release_external(gringo.Fun("query", [step-1]))
             parts.append(("step", [step]))
-            prg.cleanup_domains()
         else:
             parts.append(("base", []))
         prg.ground(parts)

@@ -1,27 +1,3 @@
-gringo/clingo 4.5.4
-  * fixed bug when creating multiple Control objects
-    (affects lua only)
-  * fixed bug when trying to configure more solvers than in portfolio
-    (affects python only)
-  * fixed #disjoint constraints
-  * improved build scripts
-  * added option to keep facts in normal rules
-gringo/clingo 4.5.3
-  * fixed regression w.r.t gringo 4.4 in translation of conditional literals
-  * fixed projection in incremental programs
-  * fixed bug with (double) negative literals in minimize constraints
-gringo/clingo 4.5.2
-  * fixed memory leak in python API when enumerating models
-  * updated to clasp version 3.1.3
-gringo/clingo 4.5.1
-  * ground term parser returns None/nil for undefined terms now
-  * added warning if a global variable occurs in a tuple of an aggregate element
-  * added auto detection of libraries
-  * changed option --update-domains into API function Control:cleanup_domains
-  * fixed domain cleanup when used with minimize constraints
-  * fixed grounding of recursive disjunctions (regression in 4.5.0)
-  * fixed Control.stats in lua bindings
-  * fixed a bug in clingo that would print 0-ary classically negated atoms wrongly
 gringo/clingo 4.5.0
   * fixed grounding of recursive aggregates
   * fixed usage of lua_next

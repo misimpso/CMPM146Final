@@ -8,6 +8,4 @@ capacities (that is, only bumps are detected).
 
 This little script allows you to first select a target and then move the
 robots. If you run out of ideas, you can click on solve! to get a little
-help from ASP. To start, call
-  $ python visualize.py
-
+help form ASP.

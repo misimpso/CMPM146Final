@@ -29,7 +29,7 @@ function run(prg, conn)
         msg, err = conn:receive("*l")
         if msg == nil then error(err) end
         if state == States.SOLVE then
-            f:cancel()
+            f:interrupt()
             ret = f:get()
         else
             ret = gringo.SolveResult.UNKNOWN

@@ -11,7 +11,6 @@ function main(prg)
     print("lp.bodies", prg.stats["lp"]["bodies"])
     -- lua tables also support dot access
     print("lp.bodies", prg.stats.lp.bodies)
-    print("optimization", prg.stats.costs[1])
 
 end
 

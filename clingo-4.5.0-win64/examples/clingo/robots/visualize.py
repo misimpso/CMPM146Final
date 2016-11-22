@@ -403,8 +403,6 @@ class Visualization:
             self.__canvas.delete(tag)
         self.__direction_images = []
 
-# {{{1 Application
-
 class Main:
     def __init__(self):
         self.__master = Tkinter.Tk()
