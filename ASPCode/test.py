@@ -7,7 +7,7 @@ import sys
 def solve(*args):
     '''Run clingo with the provided argument list and return the parsed JSON result.'''
     
-    CLINGO = './clingo-4.5.4-win64/clingo'
+    CLINGO = './clingo-4.5.0-win64/clingo'
     
     clingo = subprocess.Popen(
         [CLINGO, '--outf=2'] + list(args),

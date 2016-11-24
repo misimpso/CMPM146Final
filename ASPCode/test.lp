@@ -1,6 +1,6 @@
 #const width=10.
 
-param('width',width).
+%param('width',width).
 
 dim(0..width-1).
 
