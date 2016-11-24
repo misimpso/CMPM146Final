@@ -61,8 +61,8 @@ def render_ascii_dungeon(design):
     '''Given a dict of predicates, return an ASCII-art depiction of the a dungeon.'''
     
     sprite = dict(design['sprite'])
-    param = dict(design['param'])
-    width = param['width']
+    #param = dict(design['param'])
+    width = 10
     glyph = dict(space='.', wall='W', altar='a', gem='g', trap='_')
     block = ''.join([''.join([glyph[sprite.get((r,c),'space')]+' ' for c in range(width)])+'\n' for r in range(width)])
     return block
@@ -87,3 +87,8 @@ def side_by_side(*blocks):
     for tup in zip(*map(lambda b: b.split('\n'), blocks)):
         lines.append(' '.join(tup))
     return '\n'.join(lines)
+	
+if __name__ == '__main__':
+	design = solve_randomly("./ASPCode/test.lp","-c","width=10")
+	print(render_ascii_dungeon(design))
+	
