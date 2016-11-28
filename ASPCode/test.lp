@@ -44,11 +44,11 @@ clyde((9, 14)).
 %:- not 2 { sprite(T,trap) } 5.
     
 % the start and finish are clear
-:- pacman(T); sprite(T,pmsp).
-:- blinky(T); sprite(T,bsp).
-:- pinky(T); sprite(T,psp).
-:- inky(T); sprite(T,isp).
-:- clyde(T); sprite(T,csp).
+sprite(T, pmsp) :- pacman(T).
+sprite(T, bsp) :- blinky(T).
+sprite(T, psp) :- pinky(T).
+sprite(T, isp) :- inky(T).
+sprite(T, csp) :- clyde(T).
 
 #show tile/1.
 #show sprite/2.
