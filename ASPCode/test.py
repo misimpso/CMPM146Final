@@ -3,6 +3,7 @@ import json
 import collections
 import random
 import sys
+import pdb
 
 def solve(*args):
     '''Run clingo with the provided argument list and return the parsed JSON result.'''
@@ -58,14 +59,28 @@ def solve_randomly(*args):
     return solve(*args) 
 
 def render_ascii_dungeon(design):
-    '''Given a dict of predicates, return an ASCII-art depiction of the a dungeon.'''
-    
-    sprite = dict(design['sprite'])
+	'''Given a dict of predicates, return an ASCII-art depiction of the a dungeon.'''
+	sprite = dict(design['sprite'])
     #param = dict(design['param'])
-    width = 10
-    glyph = dict(space='.', wall='W', altar='a', gem='g', trap='_')
-    block = ''.join([''.join([glyph[sprite.get((r,c),'space')]+' ' for c in range(width)])+'\n' for r in range(width)])
-    return block
+	width = 21
+	height = 25
+	glyph = dict(vp='21', hp='20', vw='101', hw='100', tlc='107', trc='108', brc='106', blc='105', te='113', be='110', re='112', le='111', isl='120', bt='130', tt='133', rt='132', lt='131', x='140', gd='1', pmsp='4', bsp='10', psp='11', isp='12', csp='13', f='2', sf='3')
+	level_block = ''
+	for h in range(0, height):
+		for w in range(0, width):
+			if((w, h) in sprite):
+				if w == width - 1:
+					level_block += glyph[sprite[(w, h)]] + '\n'
+				else:
+					level_block += glyph[sprite[(w, h)]] + ' '
+			else:
+				if w == width - 1:
+					level_block += '0\n'
+				else:
+					level_block += '0 '
+					
+				
+	return level_block
 
 def render_ascii_touch(design, target):
     '''Given a dict of predicates, return an ASCII-art depiction where the player explored
@@ -89,6 +104,6 @@ def side_by_side(*blocks):
     return '\n'.join(lines)
 	
 if __name__ == '__main__':
-	design = solve_randomly("./ASPCode/test.lp","-c","width=10")
+	design = solve_randomly("./ASPCode/test.lp")
 	print(render_ascii_dungeon(design))
 	
