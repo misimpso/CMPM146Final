@@ -16,8 +16,8 @@ adj((X1,Y1),(X2,Y2)) :-
 pacman((10, 16)).
 blinky((10, 10)).
 pinky((9, 12)).
-inky((9, 13)).
-clyde((9, 14)).
+inky((10, 12)).
+clyde((11, 12)).
 
 % tile at most one named sprite
 % vp, hp - veritcal portal, horizontal portal
@@ -41,7 +41,7 @@ clyde((9, 14)).
 :- not 1 { sprite(T,gd) } 1.
     
 % there are between 2 and 5 traps in the level
-%:- not 2 { sprite(T,trap) } 5.
+:- not 2 { sprite(T,sf) } 5.
     
 % the start and finish are clear
 sprite(T, pmsp) :- pacman(T).
