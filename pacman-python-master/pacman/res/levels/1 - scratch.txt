@@ -1,0 +1,17 @@
+# lvlwidth 5
+# lvlheight 5
+# bgcolor 0 0 0
+# edgecolor 0 0 255
+# fillcolor 0 0 0
+# pelletcolor 255 255 255
+# fruittype 1
+
+# startleveldata
+0 0 0 0 0
+0 0 0 0 0
+0 0 0 0 0
+0 0 0 0 0
+0 0 0 0 0
+# endleveldata
+
+# sprites

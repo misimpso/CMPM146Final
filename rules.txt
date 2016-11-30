@@ -1,0 +1,7 @@
+Game Specific Constraints
+
+Needs to be atleast 4 ghosts
+Duplicate ghost start position sprites will pick the last instance of the start position. 
+Ghosts will cheat if cut off from the player.
+If a pill is present, then a ghost door needs to be present.
+
