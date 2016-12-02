@@ -57,7 +57,8 @@ def parse_result(out):
 def render_level(design, width, height):
 	'''Given a dict of predicates, return an ASCII-art depiction of the a dungeon.'''
 	sprite = {cell:sprite for (sprite, cell) in design['place'] }
-	print '{}\n'.format(design['food'])
+	#print '{}\n'.format(design['left_adj'])
+	#print '{}\n'.format(design['food'])
 	print design['reach']
 	#native width, height - 21, 25
 	#native center - (11, 13)
@@ -74,7 +75,7 @@ def render_level(design, width, height):
 	return level_block       
 
 if __name__ == '__main__':
-	print(sys.argv[1])
+	#print(sys.argv[1])
 	lvlWidth = 11
 	lvlHeight = 11
 	wall_amount = math.floor((lvlWidth * lvlHeight)*(0.43))

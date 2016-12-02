@@ -69,24 +69,69 @@ border((width-1, Y)) :- cell((width-1, Y)). % Cells along the right wall
 :- { place(S, C):wall_sprite(S) } wall_amount.
 
 % Create adjacent set that is true for every cell that is one away from the current cell 
-adj((X1,Y1),(X2,Y2)) :- 
-    cell((X1,Y1));
-    cell((X2,Y2));
-    |X1-X2| + |Y1-Y2| == 1.
-	
+adj((X1,Y1),(X2,Y2)) :- cell((X1,Y1)); cell((X2,Y2)); |X1-X2| + |Y1-Y2| == 1.
+
+% Create individual adjacent sets for each direction
+left_adj((X1, Y1), (X2, Y2)) :- cell((X1, Y1)); cell((X2, Y2)); Y1 == Y2; X1 - X2 == 1.
+right_adj((X1, Y1), (X2, Y2)) :- cell((X1, Y1)); cell((X2, Y2)); Y1 == Y2; X2 - X1 == 1.
+top_adj((X1, Y1), (X2, Y2)) :- cell((X1, Y1)); cell((X2, Y2)); X1 == X2; Y1 - Y2 == 1.
+bottom_adj((X1, Y1), (X2, Y2)) :- cell((X1, Y1)); cell((X2, Y2)); X1 == X2; Y2 - Y1 == 1.
+
+% Create individual diagonal sets for each direction
+tr_diag((X1, Y1), (X2, Y2)) :- cell((X1, Y1)); cell((X2, Y2)); X2 - X1 == 1; Y1 - Y2 == 1.
+tl_diag((X1, Y1), (X2, Y2)) :- cell((X1, Y1)); cell((X2, Y2)); X1 - X2 == 1; Y1 - Y2 == 1.
+br_diag((X1, Y1), (X2, Y2)) :- cell((X1, Y1)); cell((X2, Y2)); X2 - X1 == 1; Y2 - Y1 == 1.
+bl_diag((X1, Y1), (X2, Y2)) :- cell((X1, Y1)); cell((X2, Y2)); X1 - X2 == 1; Y2 - Y1 == 1.
+
+% Set of all wall locations
 blocked(C) :- place(S, C); wall_sprite(S).
 
+% Set of all food locations
 food(C) :- place(f, C); cell(C).
 food(C) :- place(sf, C); cell(C).
 
+% Set of all blank space locations
+blank(C) :- place(blank, C); cell(C).
+
+% Set of all reachable cells by pacman
 reach(C) :- place(pmsp, C); cell(C).
 reach(C2) :- reach(C1); adj(C1,C2); not blocked(C2).
+
+% Fail if a food cell isn't reachable
 :- cell(C); not reach(C); food(C).
+
+% Fail if ghost position isn't reachable by pacman
 :- unique_sprite(G); place(G, C); not reach(C).
 
-tube(C1) :- cell(C1); 2 { blocked(C2); adj(C1,C2)} 2.
+% Fail if a blank cell is reachable
+:- blank(C); reach(C).
+
+% Fail if: (B = wall, C1, C2 = food)
+% B C2
+% C1 B 
+:- food(C1); food(C2); C1 != C2; blocked(B); tr_diag(C1, C2); top_adj(C1, B); right_adj(C1, B).
+
+% Fail if:
+% C2 B
+% B C1
+:- food(C1); food(C2); C1 != C2; blocked(B); tl_diag(C1, C2); top_adj(C1, B); left_adj(C1, B).
+
+% Fail if:
+% C1 B
+% B C2
+:- food(C1); food(C2); C1 != C2; blocked(B); br_diag(C1, C2); bottom_adj(C1, B); right_adj(C1, B).
+
+% Fail if:
+% B C1
+% C2 B
+:- food(C1); food(C2); C1 != C2; blocked(B); bl_diag(C1, C2); bottom_adj(C1, B); left_adj(C1, B).
+
+tube(C1) :- food(C1); 2 { blocked(C2); adj(C1,C2)} 2.
 :- 10 { tube(C1) }.
+
 
 #show place/2.
 #show reach/1.
-#show food/1.
+%#show food/1.
+%#show blank/1.
+#show left_adj/2.
