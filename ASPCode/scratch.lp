@@ -4,7 +4,6 @@
 % Keep pacman, ghost pos, and door pos hardcoded, so we have a constant position and proximity from each other
 % ---------------------------------------------------
 
-
 % tile at most one named sprite
 
 % sprite(vp;hp). % vp, hp - veritcal portal, horizontal portal
@@ -55,9 +54,9 @@ cell((0..width-1, 0..height-1)).
 
 % Creating border cell set
 border((X, 0)) :- cell((X, 0)). % Cells along the top wall
-border((X, height-1)) :- cell((X, height-1)). % Cells along the bottom wall
+%border((X, height-1)) :- cell((X, height-1)). % Cells along the bottom wall
 border((0, Y)) :- cell((0, Y)). % Cells along the left wall
-border((width-1, Y)) :- cell((width-1, Y)). % Cells along the right wall
+%border((width-1, Y)) :- cell((width-1, Y)). % Cells along the right wall
 
 % Fail if border cell doesnt contain a wall_sprite
 :- border(C); place(S, C); not wall_sprite(S).
@@ -66,7 +65,7 @@ border((width-1, Y)) :- cell((width-1, Y)). % Cells along the right wall
 :- not 1 { place(f, C):cell(C) }.
 
 % Fail if amount of wall sprites is less than the constant wall amount
-:- { place(S, C):wall_sprite(S) } wall_amount.
+%:- { place(S, C):wall_sprite(S) } wall_amount.
 
 % Create adjacent set that is true for every cell that is one away from the current cell 
 adj((X1,Y1),(X2,Y2)) :- cell((X1,Y1)); cell((X2,Y2)); |X1-X2| + |Y1-Y2| == 1.
@@ -126,12 +125,11 @@ reach(C2) :- reach(C1); adj(C1,C2); not blocked(C2).
 % C2 B
 :- food(C1); food(C2); C1 != C2; blocked(B); bl_diag(C1, C2); bottom_adj(C1, B); left_adj(C1, B).
 
-tube(C1) :- food(C1); 2 { blocked(C2); adj(C1,C2)} 2.
+tube(C1) :- food(C1); 2 { blocked(C2); adj(C1,C2)} 3.
 :- 10 { tube(C1) }.
-
 
 #show place/2.
 #show reach/1.
 %#show food/1.
 %#show blank/1.
-#show left_adj/2.
+%#show left_adj/2.
