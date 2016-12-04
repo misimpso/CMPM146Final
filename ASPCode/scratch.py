@@ -101,13 +101,6 @@ def render_level(design, width, height):
     
     for i in range(0,len(level_block_0)):
         level_block_0.append(level_block_2[i])
-            
-    
-        
-        
-    for i in level_block_0:
-        print i
-    print "\n"
     
     return level_block_0      
 
@@ -119,7 +112,7 @@ if __name__ == '__main__':
     design = solve("./ASPCode/scratch.lp", "-c", "width=%d"%lvlWidth, "-c", "height=%d"%lvlHeight, "-c", "wall_amount=%d"%wall_amount, '--sign-def=3','--seed='+str(random.randint(0,1<<30)))
     #print design
     
-    level = '# lvlwidth ' + str(lvlWidth*2) + '\n# lvlheight ' + str(lvlHeight*2) + '\n# bgcolor 0 0 0\n# edgecolor 0 0 255\n# fillcolor 0 0 0\n# pelletcolor 255 255 255\n# fruittype 1\n# startleveldata\n'
+    level = '# lvlwidth ' + str(lvlWidth*2-1) + '\n# lvlheight ' + str(lvlHeight*2-1) + '\n# bgcolor 0 0 0\n# edgecolor 0 0 255\n# fillcolor 0 0 0\n# pelletcolor 255 255 255\n# fruittype 1\n# startleveldata\n'
     
     x = render_level(design, lvlWidth, lvlHeight)
     for i in range(0,len(x)):

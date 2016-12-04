@@ -65,7 +65,7 @@ border((0, Y)) :- cell((0, Y)). % Cells along the left wall
 :- not 1 { place(f, C):cell(C) }.
 
 % Fail if amount of wall sprites is less than the constant wall amount
-%:- { place(S, C):wall_sprite(S) } wall_amount.
+:- { place(S, C):wall_sprite(S) } wall_amount.
 
 % Create adjacent set that is true for every cell that is one away from the current cell 
 adj((X1,Y1),(X2,Y2)) :- cell((X1,Y1)); cell((X2,Y2)); |X1-X2| + |Y1-Y2| == 1.
@@ -88,6 +88,8 @@ blocked(C) :- place(S, C); wall_sprite(S).
 % Set of all food locations
 food(C) :- place(f, C); cell(C).
 food(C) :- place(sf, C); cell(C).
+
+:- food(C); blocked(B); 2 { adj(C, B) } 2.
 
 % Set of all blank space locations
 blank(C) :- place(blank, C); cell(C).
