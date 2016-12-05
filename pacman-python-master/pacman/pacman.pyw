@@ -33,12 +33,12 @@ JS_YAXIS=1 # axis 1 for up/down (default for most joysticks)
 JS_STARTBUTTON=0 # button number to start the game. this is a matter of personal preference, and will vary from device to device
 
 # Must come before pygame.init()
-pygame.mixer.pre_init(22050,16,2,512)
 JS_STARTBUTTON=0 # button number to start the game. this is a matter of personal preference, and will vary from device to device
-pygame.mixer.init()
 
 clock = pygame.time.Clock()
 pygame.init()
+pygame.mixer.pre_init(22050,16,2,512)
+pygame.mixer.init()
 
 window = pygame.display.set_mode((1, 1))
 pygame.display.set_caption("Pacman")
@@ -1446,6 +1446,12 @@ tileIDImage = {} # gives tile image (when the ID# is known)
 # create game and level objects and load first level
 thisGame = game()
 thisLevel = level()
+
+if len(sys.argv) > 1:
+    target = int(sys.argv[1])
+    print "From command line arguments, starting on level %d" % target
+    thisGame.levelNum = target
+    
 thisLevel.LoadLevel( thisGame.GetLevelNum() )
 
 print thisGame.screenSize
