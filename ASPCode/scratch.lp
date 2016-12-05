@@ -1,9 +1,3 @@
-%------------------- Ideas -------------------------
-% Put power pills at each corner, make sure there are multiple paths to each from pacman start pos
-% For larger maps (15x15 and up) generate a quadrant, or half than mirror
-% Keep pacman, ghost pos, and door pos hardcoded, so we have a constant position and proximity from each other
-% ---------------------------------------------------
-
 % tile at most one named sprite
 
 % sprite(vp;hp). % vp, hp - veritcal portal, horizontal portal
@@ -26,12 +20,17 @@ ghost_sprite(bsp;psp;isp;csp).
 % Make Pacman, the ghost door, all of the ghosts a unique sprite
 unique_sprite(pmsp).
 unique_sprite(gd).
+unique_sprite(sf).
 unique_sprite(G) :- ghost_sprite(G).
+
+passable_space(f; sf).
+passable_space(G) :- unique_sprite(G).
 
 % Dimensions of the level
 #const width=5.
 #const height=5.
 #const wall_amount = 5.
+#const blank_amount = 5.
 
 % Coordinates between 0, width-1 and 0, height-1 are cells
 cell((0..width-1, 0..height-1)).
@@ -67,6 +66,9 @@ border((0, Y)) :- cell((0, Y)). % Cells along the left wall
 % Fail if amount of wall sprites is less than the constant wall amount
 :- { place(S, C):wall_sprite(S) } wall_amount.
 
+% Fail if amount of wall sprites is greater than the constant blank amount
+:- blank_amount { place(blank, C) }.
+
 % Create adjacent set that is true for every cell that is one away from the current cell 
 adj((X1,Y1),(X2,Y2)) :- cell((X1,Y1)); cell((X2,Y2)); |X1-X2| + |Y1-Y2| == 1.
 
@@ -82,6 +84,11 @@ tl_diag((X1, Y1), (X2, Y2)) :- cell((X1, Y1)); cell((X2, Y2)); X1 - X2 == 1; Y1 
 br_diag((X1, Y1), (X2, Y2)) :- cell((X1, Y1)); cell((X2, Y2)); X2 - X1 == 1; Y2 - Y1 == 1.
 bl_diag((X1, Y1), (X2, Y2)) :- cell((X1, Y1)); cell((X2, Y2)); X1 - X2 == 1; Y2 - Y1 == 1.
 
+diag(C1, C2) :- cell(C1); cell(C2); tr_diag(C1, C2).
+diag(C1, C2) :- cell(C1); cell(C2); tl_diag(C1, C2).
+diag(C1, C2) :- cell(C1); cell(C2); br_diag(C1, C2).
+diag(C1, C2) :- cell(C1); cell(C2); tl_diag(C1, C2).
+
 % Set of all wall locations
 blocked(C) :- place(S, C); wall_sprite(S).
 
@@ -89,7 +96,7 @@ blocked(C) :- place(S, C); wall_sprite(S).
 food(C) :- place(f, C); cell(C).
 food(C) :- place(sf, C); cell(C).
 
-:- food(C); blocked(B); 2 { adj(C, B) } 2.
+:- food(C); blocked(B); 2 { adj(C, B) } 2. % Revised
 
 % Set of all blank space locations
 blank(C) :- place(blank, C); cell(C).
@@ -127,11 +134,46 @@ reach(C2) :- reach(C1); adj(C1,C2); not blocked(C2).
 % C2 B
 :- food(C1); food(C2); C1 != C2; blocked(B); bl_diag(C1, C2); bottom_adj(C1, B); left_adj(C1, B).
 
-tube(C1) :- food(C1); 2 { blocked(C2); adj(C1,C2)} 3.
-:- 10 { tube(C1) }.
+%tube(C1) :- food(C1); 2 { blocked(C2); adj(C1,C2)} 3.
+%:- 10 { tube(C1) }.
+
+
+:- food(C1); left_adj(C1, C2); bottom_adj(C1, C3); bl_diag(C1, C4); food(C2); food(C3); food(C4).
+:- food(C1); left_adj(C1, C2); top_adj(C1, C3); tl_diag(C1, C4); food(C2); food(C3); food(C4).
+:- food(C1); right_adj(C1, C2); top_adj(C1, C3); tr_diag(C1, C4); food(C2); food(C3); food(C4).
+:- food(C1); right_adj(C1, C2); bottom_adj(C1, C3); br_diag(C1, C4); food(C2); food(C3); food(C4).
+
+:- ghost_sprite(C1); left_adj(C1, C2); bottom_adj(C1, C3); bl_diag(C1, C4); food(C2); food(C3); food(C4).
+:- ghost_sprite(C1); left_adj(C1, C2); top_adj(C1, C3); tl_diag(C1, C4); food(C2); food(C3); food(C4).
+:- ghost_sprite(C1); right_adj(C1, C2); top_adj(C1, C3); tr_diag(C1, C4); food(C2); food(C3); food(C4).
+:- ghost_sprite(C1); right_adj(C1, C2); bottom_adj(C1, C3); br_diag(C1, C4); food(C2); food(C3); food(C4).
+
+:- unique_sprite(C1); left_adj(C1, C2); bottom_adj(C1, C3); bl_diag(C1, C4); unique_sprite(C2); unique_sprite(C3); unique_sprite(C4).
+:- unique_sprite(C1); left_adj(C1, C2); top_adj(C1, C3); tl_diag(C1, C4); unique_sprite(C2); unique_sprite(C3); unique_sprite(C4).
+:- unique_sprite(C1); right_adj(C1, C2); top_adj(C1, C3); tr_diag(C1, C4); unique_sprite(C2); unique_sprite(C3); unique_sprite(C4).
+:- unique_sprite(C1); right_adj(C1, C2); bottom_adj(C1, C3); br_diag(C1, C4); unique_sprite(C2); unique_sprite(C3); unique_sprite(C4).
+
+:- blocked(C1); left_adj(C1, C2); bottom_adj(C1, C3); bl_diag(C1, C4); blocked(C2); blocked(C3); blocked(C4).
+:- blocked(C1); left_adj(C1, C2); top_adj(C1, C3); tl_diag(C1, C4); blocked(C2); blocked(C3); blocked(C4).
+:- blocked(C1); right_adj(C1, C2); top_adj(C1, C3); tr_diag(C1, C4); blocked(C2); blocked(C3); blocked(C4).
+:- blocked(C1); right_adj(C1, C2); bottom_adj(C1, C3); br_diag(C1, C4); blocked(C2); blocked(C3); blocked(C4).
+
+walled_off(C1) :- food(C1); top_adj(C1, C2); right_adj(C1, C3); bottom_adj(C1, C4); blocked(C2); blocked(C3); blocked(C4).
+walled_off(C1) :- food(C1); left_adj(C1, C2); right_adj(C1, C3); bottom_adj(C1, C4); blocked(C2); blocked(C3); blocked(C4).
+walled_off(C1) :- food(C1); top_adj(C1, C2); left_adj(C1, C3); bottom_adj(C1, C4); blocked(C2); blocked(C3); blocked(C4).
+walled_off(C1) :- food(C1); top_adj(C1, C2); right_adj(C1, C3); left_adj(C1, C4); blocked(C2); blocked(C3); blocked(C4).
+
+walled_off(C1) :- unique_sprite(C1); top_adj(C1, C2); right_adj(C1, C3); bottom_adj(C1, C4); blocked(C2); blocked(C3); blocked(C4).
+walled_off(C1) :- unique_sprite(C1); left_adj(C1, C2); right_adj(C1, C3); bottom_adj(C1, C4); blocked(C2); blocked(C3); blocked(C4).
+walled_off(C1) :- unique_sprite(C1); top_adj(C1, C2); left_adj(C1, C3); bottom_adj(C1, C4); blocked(C2); blocked(C3); blocked(C4).
+walled_off(C1) :- unique_sprite(C1); top_adj(C1, C2); right_adj(C1, C3); left_adj(C1, C4); blocked(C2); blocked(C3); blocked(C4).
+
+:- walled_off(C).
 
 #show place/2.
-#show reach/1.
+%#show blocked/1.
+%#show reach/1.
+%#show walled_off/1.
 %#show food/1.
 %#show blank/1.
 %#show left_adj/2.
