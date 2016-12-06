@@ -134,9 +134,6 @@ reach(C2) :- reach(C1); adj(C1,C2); not blocked(C2).
 % C2 B
 :- food(C1); food(C2); C1 != C2; blocked(B); bl_diag(C1, C2); bottom_adj(C1, B); left_adj(C1, B).
 
-%tube(C1) :- food(C1); 2 { blocked(C2); adj(C1,C2)} 3.
-%:- 10 { tube(C1) }.
-
 
 :- food(C1); left_adj(C1, C2); bottom_adj(C1, C3); bl_diag(C1, C4); food(C2); food(C3); food(C4).
 :- food(C1); left_adj(C1, C2); top_adj(C1, C3); tl_diag(C1, C4); food(C2); food(C3); food(C4).
@@ -158,16 +155,13 @@ reach(C2) :- reach(C1); adj(C1,C2); not blocked(C2).
 :- blocked(C1); right_adj(C1, C2); top_adj(C1, C3); tr_diag(C1, C4); blocked(C2); blocked(C3); blocked(C4).
 :- blocked(C1); right_adj(C1, C2); bottom_adj(C1, C3); br_diag(C1, C4); blocked(C2); blocked(C3); blocked(C4).
 
-walled_off(C1) :- food(C1); top_adj(C1, C2); right_adj(C1, C3); bottom_adj(C1, C4); blocked(C2); blocked(C3); blocked(C4).
-walled_off(C1) :- food(C1); left_adj(C1, C2); right_adj(C1, C3); bottom_adj(C1, C4); blocked(C2); blocked(C3); blocked(C4).
-walled_off(C1) :- food(C1); top_adj(C1, C2); left_adj(C1, C3); bottom_adj(C1, C4); blocked(C2); blocked(C3); blocked(C4).
-walled_off(C1) :- food(C1); top_adj(C1, C2); right_adj(C1, C3); left_adj(C1, C4); blocked(C2); blocked(C3); blocked(C4).
+directional_adj((X1,Y1),(X2-X1,Y2-Y1),(X2,Y2)) :- cell((X1,Y1)); cell((X2,Y2)); adj((X1, Y1), (X2, Y2)).
+direction(D) :- directional_adj(C1,D,C2).
+diagonal((DX,DY)) :- direction((DX,DY)); |DX|+|DY| == 2.
+cardinal(D) :- direction(D); not diagonal(D).
 
-walled_off(C1) :- unique_sprite(C1); top_adj(C1, C2); right_adj(C1, C3); bottom_adj(C1, C4); blocked(C2); blocked(C3); blocked(C4).
-walled_off(C1) :- unique_sprite(C1); left_adj(C1, C2); right_adj(C1, C3); bottom_adj(C1, C4); blocked(C2); blocked(C3); blocked(C4).
-walled_off(C1) :- unique_sprite(C1); top_adj(C1, C2); left_adj(C1, C3); bottom_adj(C1, C4); blocked(C2); blocked(C3); blocked(C4).
-walled_off(C1) :- unique_sprite(C1); top_adj(C1, C2); right_adj(C1, C3); left_adj(C1, C4); blocked(C2); blocked(C3); blocked(C4).
-
+walled_off(C1) :- unique_sprite(C1); 3 { blocked(C2) : directional_adj(C1,Dir,C2), cardinal(Dir) }.
+walled_off(C1) :- food(C1); 3 { blocked(C2) : directional_adj(C1,Dir,C2), cardinal(Dir) }.
 :- walled_off(C).
 
 #show place/2.

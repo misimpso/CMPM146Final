@@ -139,7 +139,9 @@ def render_level(design, width, height):
         while(sprite[(rand_cell, 1)] != 'f' and len(choices)):
             rand_cell = random.choice(choices)
             choices.remove(rand_cell)
-        sprite[(rand_cell, 0)] = 'vp'
+            
+        if sprite[(rand_cell, 1)] != 'f':
+            sprite[(rand_cell, 0)] = 'vp'
         
     # Decides where to put the horizontal portals along the left wall of top left quadrant
     if(random.random() < .5):
@@ -149,7 +151,9 @@ def render_level(design, width, height):
         while(sprite[(1, rand_cell)] != 'f' and len(choices)):
             rand_cell = random.choice(choices)
             choices.remove(rand_cell)
-        sprite[(0, rand_cell)] = 'hp'
+        
+        if sprite[(1, rand_cell)] != 'f':
+            sprite[(0, rand_cell)] = 'hp'
     
     # Check if power pill is within the column or row that will get cut off
     # Replaces it randomly in the quadrant if it is
@@ -247,11 +251,22 @@ if __name__ == '__main__':
     lvlHeight = 11
     
     # Constants to be sent to clingo
+    blank_per = .1
+    if len(sys.argv) > 1:
+        if str(sys.argv[1]) == 'medium':
+            blank_per = .07
+        elif str(sys.argv[1]) == 'hard':
+            blank_per = .02
+        elif str(sys.argv[1]) == 'rand':
+            blank_per = random.random()
+            while blank_per > .8:
+                blank_per = random.random()
+    
     wall_amount = math.floor((lvlWidth * lvlHeight)*(0.43))
-    blank_amount = math.floor((lvlWidth * lvlHeight)*(.1))
+    blank_amount = math.floor((lvlWidth * lvlHeight)*(blank_per))
     
     # Get back design from clingo with our provided constants
-    design = solve("./ASPCode/scratch.lp", "-c", "width=%d"%lvlWidth, "-c", "height=%d"%lvlHeight, "-c", "wall_amount=%d"%wall_amount, "-c", "blank_amount=%d"%blank_amount, '--sign-def=3','--seed='+str(random.randint(0,1<<30)))
+    design = solve("./ASPCode/generator.lp", "-c", "width=%d"%lvlWidth, "-c", "height=%d"%lvlHeight, "-c", "wall_amount=%d"%wall_amount, "-c", "blank_amount=%d"%blank_amount, '--sign-def=3','--seed='+str(random.randint(0,1<<30)))
     
     # Start creating text to be saved to 1.txt
     level = '# lvlwidth ' + str(lvlWidth*2-1) + '\n# lvlheight ' + str(lvlHeight*2-1) + '\n# bgcolor 0 0 0\n# edgecolor 0 0 255\n# fillcolor 0 0 0\n# pelletcolor 255 255 255\n# fruittype 1\n# startleveldata\n'
